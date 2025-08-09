@@ -1,7 +1,7 @@
 // =============================
 // Configuration
 // =============================
-const ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbyicPWmRUWE7N7OfRbMC0kfRXRsipfff5brySa69SxXghN2KkQZFsGmS3m1MxsDcimh/exec';
+const ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbzz10L_f8XH0Xn38esL_9bqqlnHWzUOQCJ9eHm0wD31B6Jekbs454pdJ5f5xz6APei1/exec';
 const STATUS_SUCCESS = 'success';
 
 // =============================
