@@ -9,6 +9,7 @@ form.addEventListener('submit', async (e) => {
   const successElem = document.getElementById('formSuccess');
   if (errorElem) errorElem.textContent = '';
   if (successElem) successElem.textContent = '';
+
   const name = form.name.value.trim();
   const email = form.email.value.trim();
   const phone = form.phone.value.trim();
@@ -18,6 +19,7 @@ form.addEventListener('submit', async (e) => {
     if (errorElem) errorElem.textContent = 'Bitte alle Pflichtfelder ausfüllen.';
     return;
   }
+
     try {
         const response = await fetch(ENDPOINT_URL, {
             method: 'POST',
