@@ -1,26 +1,20 @@
-// =============================
-// Configuration
-// =============================
-const ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbzz10L_f8XH0Xn38esL_9bqqlnHWzUOQCJ9eHm0wD31B6Jekbs454pdJ5f5xz6APei1/exec';
-const STATUS_SUCCESS = 'success';
+// Contact form client script - secure, modern, best practices
+// Expects Cloudflare Worker endpoint (no API keys in frontend!)
 
-// =============================
-// Cached DOM Elements
-// =============================
+const ENDPOINT_URL = "https://contact.quantumvlock.workers.dev";
+
+// --- DOM Elements ---
 const form = document.getElementById('contactForm');
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
 const phoneInput = document.getElementById('phone');
 const messageInput = document.getElementById('message');
-
 const nameError = document.getElementById('nameError');
 const emailError = document.getElementById('emailError');
 const phoneError = document.getElementById('phoneError');
 const messageError = document.getElementById('messageError');
 
-// =============================
-// Helper: Clear all error messages
-// =============================
+// --- Helper: Clear error messages ---
 function clearErrors() {
     nameError.textContent = '';
     emailError.textContent = '';
@@ -28,11 +22,10 @@ function clearErrors() {
     messageError.textContent = '';
 }
 
-// =============================
-// Helper: Basic client-side validation
-// =============================
+// --- Helper: Validation ---
 function validateInputs(name, email, phone, message) {
     let isValid = true;
+    clearErrors();
 
     if (!name) {
         nameError.textContent = 'Bitte geben Sie Ihren Namen ein.';
@@ -48,7 +41,7 @@ function validateInputs(name, email, phone, message) {
     if (!phone) {
         phoneError.textContent = 'Bitte geben Sie Ihre Telefonnummer ein.';
         isValid = false;
-    } else if (!/^[\d+\s\-\/()]{6,20}$/.test(phone)) {
+    } else if (!/^[\d+\s\-/()]{6,20}$/.test(phone)) {
         phoneError.textContent = 'Bitte geben Sie eine gültige Telefonnummer ein.';
         isValid = false;
     }
@@ -60,40 +53,39 @@ function validateInputs(name, email, phone, message) {
     return isValid;
 }
 
-// =============================
-// Submit Event Handler
-// =============================
+// --- Form Submit Handler ---
 form.addEventListener('submit', async function (e) {
     e.preventDefault();
-    clearErrors();
+    // Optionally clear old errors (validation now does this)
+    // clearErrors();
 
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
     const phone = phoneInput.value.trim();
     const message = messageInput.value.trim();
 
-    // Validate before sending
-    if (!validateInputs(name, email, phone, message)) {
-        return;
-    }
+    if (!validateInputs(name, email, phone, message)) return;
 
     const payload = { name, email, phone, message };
 
     try {
         const response = await fetch(ENDPOINT_URL, {
             method: 'POST',
-            mode: 'cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
-        if (!response.ok) {
-            throw new Error('Serverfehler: ' + response.status);
+        // Defensive: Check network errors and valid JSON
+        if (!response.ok) throw new Error('Serverfehler: ' + response.status);
+        let result;
+        try {
+            result = await response.json();
+        } catch {
+            throw new Error('Ungültige Serverantwort.');
         }
 
-        const result = await response.json();
-
-        if (result.status === STATUS_SUCCESS) {
+        // Accepts either id or success in result for compatibility
+        if ((result && result.id) || result.success) {
             alert('Nachricht erfolgreich gesendet!');
             form.reset();
         } else {
@@ -104,4 +96,3 @@ form.addEventListener('submit', async function (e) {
         alert('Ein Netzwerkfehler oder Serverfehler ist aufgetreten. Bitte später erneut versuchen.');
     }
 });
-
