@@ -7,13 +7,20 @@ export default async function handler(req, res) {
   const origin = req.headers.origin;
   const allowOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : "*";
 
-  // Set CORS headers on all responses
   res.setHeader("Access-Control-Allow-Origin", allowOrigin);
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
+  const AIRTABLE_BASE = process.env.AIRTABLE_BASE;
+  const AIRTABLE_TABLE = process.env.AIRTABLE_TABLE;
+  const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
+
+  if (!AIRTABLE_BASE || !AIRTABLE_TABLE || !AIRTABLE_TOKEN) {
+    res.status(500).json({ error: "Server misconfigured" });
+    return;
+  }
+
   if (req.method === "OPTIONS") {
-    // Respond to preflight request
     res.status(204).end();
     return;
   }
@@ -30,21 +37,9 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Airtable config - set these as Vercel Environment Variables!
-  const AIRTABLE_BASE = process.env.AIRTABLE_BASE;
-  const AIRTABLE_TABLE = process.env.AIRTABLE_TABLE;
-  const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
-
-  if (!AIRTABLE_BASE || !AIRTABLE_TABLE || !AIRTABLE_TOKEN) {
-    res.status(500).json({ error: "Server misconfigured" });
-    return;
-  }
-
   try {
     const airtableRes = await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(
-        AIRTABLE_TABLE
-      )}`,
+      `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(AIRTABLE_TABLE)}`,
       {
         method: "POST",
         headers: {
