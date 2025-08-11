@@ -1,7 +1,7 @@
 // Contact form client script - secure, modern, best practices
 // Expects Cloudflare Worker endpoint (no API keys in frontend!)
 
-const ENDPOINT_URL = "https://contact.quantumvlock.workers.dev";
+const ENDPOINT_URL = "kontaktformular.vercel.app";
 
 // --- DOM Elements ---
 const form = document.getElementById('contactForm');
