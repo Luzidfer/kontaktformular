@@ -1,1 +1,16 @@
+# System
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# Node
+node_modules/
+.env
+
+# Logs
+*.log
+
+#continue rules
 .continue
