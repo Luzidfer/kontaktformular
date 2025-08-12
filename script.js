@@ -1,4 +1,4 @@
-const ENDPOINT_URL = "https://kontaktformular.vercel.app/";
+const ENDPOINT_URL = "https://kontaktformular.vercel.app/api/contact";
 
 const form = document.getElementById('contactForm');
 
