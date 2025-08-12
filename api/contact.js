@@ -11,6 +11,12 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
+
+
+
+  console.log('Base:', process.env.AIRTABLE_BASE);
+  console.log('Table:', process.env.AIRTABLE_TABLE);
+  console.log('Token:', process.env.AIRTABLE_TOKEN ? 'Set' : 'Missing');
   const AIRTABLE_BASE = process.env.AIRTABLE_BASE;
   const AIRTABLE_TABLE = process.env.AIRTABLE_TABLE;
   const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
@@ -64,4 +70,5 @@ export default async function handler(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
+
 
