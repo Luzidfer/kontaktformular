@@ -28,6 +28,5 @@ form.addEventListener('submit', async (e) => {
   } catch (err) {
     alert("Network error: " + err.message);
   }
-=======
  main
 });
