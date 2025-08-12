@@ -1,37 +1,30 @@
-document.getElementById('contactForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
+const ENDPOINT_URL = "https://kontaktformular.vercel.app/api/contact";
 
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const message = document.getElementById('message').value.trim();
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-    const payload = {
-        name,
-        email,
-        message
-    };
+  const name = form.name.value.trim();
+  const email = form.email.value.trim();
+  const phone = form.phone.value.trim();
+  const message = form.message.value.trim();
 
-    try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbzMZgddGeMtp0tKyll6KomwLy-dFJtbN8b0S32LPT9SHm9-Q6eCj_qLNNRee2-i40ub/exec', {
-            method: 'POST',
-            mode: 'cors', // wichtig für CORS
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
+  try {
+    const response = await fetch(ENDPOINT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, phone, message })
+    });
 
-        const result = await response.json();
+    const data = await response.json();
+    console.log("API response:", data);
 
-        if (result.status === 'success') {
-            alert('Nachricht erfolgreich gesendet!');
-            document.getElementById('contactForm').reset();
-        } else {
-            alert('Fehler beim Senden: ' + result.message);
-        }
-
-    } catch (error) {
-        console.error('Fehler:', error);
-        alert('Ein Netzwerkfehler ist aufgetreten. Bitte später erneut versuchen.');
+    if (response.ok) {
+      alert("Message sent successfully!");
+      form.reset();
+    } else {
+      alert(`Error: ${JSON.stringify(data)}`);
     }
+  } catch (err) {
+    alert("Network error: " + err.message);
+  }
 });
